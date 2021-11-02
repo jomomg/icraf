@@ -30,5 +30,5 @@ class User(AbstractBaseUser):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    other_names = models.CharField(max_length=150)
+    other_names = models.CharField(max_length=150, blank=True)
     roles = models.ManyToManyField(Role)

@@ -10,6 +10,9 @@ class PermissionSerializer(serializers.ModelSerializer):
         model = Permission
         fields = ('id', 'name', 'description')
         read_only_fields = ('id',)
+        extra_kwargs = {
+            'description': {'required': False}
+        }
 
 
 class RoleSerializer(serializers.ModelSerializer):
@@ -20,6 +23,9 @@ class RoleSerializer(serializers.ModelSerializer):
         model = Role
         fields = ('id', 'name', 'description')
         read_only_fields = ('id',)
+        extra_kwargs = {
+            'description': {'required': False}
+        }
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,5 +37,5 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'first_name', 'last_name', 'other_names')
         read_only_fields = ('id',)
         extra_kwargs = {
-            'email': {'required': True}
+            'other_names': {'required': False}
         }

@@ -134,5 +134,11 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
-    'EXCEPTION_HANDLER': 'utils.custom_exception_handler'
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.auth.JWTAuthentication',
+    ),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+    'EXCEPTION_HANDLER': 'api.utils.custom_exception_handler'
 }

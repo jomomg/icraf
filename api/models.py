@@ -32,3 +32,6 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=100)
     other_names = models.CharField(max_length=150, blank=True)
     roles = models.ManyToManyField(Role)
+
+    def is_admin(self):
+        pass

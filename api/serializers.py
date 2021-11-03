@@ -32,10 +32,48 @@ class UserSerializer(serializers.ModelSerializer):
     """
     User model serializer
     """
+
+    roles = RoleSerializer(many=True, read_only=True)
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'other_names')
+        fields = ('id', 'email', 'first_name', 'last_name', 'other_names', 'roles', 'password')
         read_only_fields = ('id',)
         extra_kwargs = {
-            'other_names': {'required': False}
+            'other_names': {'required': False},
+            'password': {'write_only': True}
         }
+
+    def create(self, validated_data):
+        """
+        Creates and saves a user object
+        """
+        user = User(
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            other_names=validated_data.get('other_names', '')
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
+
+class UserRoleAssignmentSerializer(serializers.ModelSerializer):
+    role = serializers.UUIDField(write_only=True)
+    roles = RoleSerializer(many=True, read_only=True)
+
+    def create(self, validated_data):
+        role_id = validated_data['role']
+        role = Role.objects.get(pk=role_id)
+        if not role:
+            raise serializers.ValidationError('specified role was not found')
+        else:
+            user = self.context.get('user')
+            user.roles.add(role)
+            return user
+
+    class Meta:
+        model = User
+        exclude = ['password']
+        read_only_fields = ['id', 'email', 'first_name', 'last_name', 'other_names', 'roles']

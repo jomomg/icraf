@@ -20,11 +20,11 @@ const renderUsers = (users) => {
             {user.email}
         </td>
         <td>
-            <Badge color="secondary">
-                <Link to={`/users/${user.id}`}>
-                more...
-                </Link>
+        <Link to={`/users/${user.id}`}>
+            <Badge color="success">
+                more info
             </Badge>
+        </Link>
         </td>
         </tr>
     ));

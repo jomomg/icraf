@@ -60,6 +60,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserRoleAssignmentSerializer(serializers.ModelSerializer):
+    """
+    Role assignment serializer
+    """
     role = serializers.UUIDField(write_only=True)
     roles = RoleSerializer(many=True, read_only=True)
 

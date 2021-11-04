@@ -1,6 +1,6 @@
 .grid-container {
     display: grid;
-    grid-template-rows: 80px 10fr 1fr;
+    grid-template-rows: 80px 11fr 4fr;
     row-gap: 5px;
 
 }

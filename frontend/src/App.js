@@ -7,7 +7,7 @@ import './App.css';
 function App() {
   return (
     <Switch>
-      {/* <Route path="/" exact component={LandingPage}/> */}
+      <Route path="/" exact component={Admin}/>
       <Route path='/login' component={Login}/>
       <Route path='/admin' component={Admin}/>
       <Route path='/users/:userId' component={UserPage}/>

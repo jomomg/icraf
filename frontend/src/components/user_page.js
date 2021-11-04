@@ -8,39 +8,30 @@ import {
     CardBody,
     CardTitle,
     Badge,
-    FormGroup,
-    Input,
-    Label,
+    ListInlineItem,
+    List,
+    Button,
 } from 'reactstrap';
 
-const renderRoles = (roles) => {
-    return roles.map((role) => (
-        <FormGroup check key={role.id}>
-            <Label check>
-                {role.name}
-            </Label>
-            <Input type="checkbox" />
-        </FormGroup>
-    ))
-};
+
 
 class UserPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userData: {},
-            role: {},
+            roles: [],
             error: '',
+            modal: false,
         }
     };
-
     
     getUserData = (userId) => {
         api.get(`${USERS_URL}${userId}/`)
-            .then(res => this.setState({ userData: res.data.data, role: res.data.data.role}))
+            .then(res => this.setState({ userData: res.data.data, 
+                roles: res.data.data.roles}))
             .catch(err => this.setState({ error: `${err.response.data.message}`, }));
     };
-
 
     componentDidMount() {
         const userId = this.props.match.params.userId;
@@ -48,7 +39,8 @@ class UserPage extends Component {
     };
 
     render(){
-        const { first_name, last_name, other_names, email, role} = this.state.userData;
+        const { first_name, last_name, other_names, email} = this.state.userData;
+        const roles = this.state.roles;
     
         return (
             <div className='grid-container'>
@@ -72,8 +64,21 @@ class UserPage extends Component {
                                 <Badge color='primary'> Email: </Badge>
                                 <h4>{email}</h4>
                                 <Badge color='primary'> Roles: </Badge>
-                                <br/> 
-                                <Badge color='danger'>{role.name}</Badge>
+                                <br/>
+                                <List>
+                                {roles.map((role) =>
+                                    <ListInlineItem key={role.id}>
+                                        <Badge color='danger'>{role.name}</Badge>
+                                    </ListInlineItem>
+                                )}
+                                <br/>
+                                <Button 
+                                    color='success'
+                                    size='sm' 
+                                    outline> 
+                                    + Assign role 
+                                </Button>
+                                </List>   
                             </CardBody>
                         </Card>
                     </div>

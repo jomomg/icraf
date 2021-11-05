@@ -10,23 +10,23 @@
 ### Notes on the backend
 - The API endpoints are as follows:
 
-Login: *POST /api/login/*
+- Login: *POST /api/login/*
 
-Create a user: *POST /api/users/*
-Retrieve all users *GET /api/users/*
-Retrieve a specific user *GET /api/users/<id>*
-Edit a user's details *PATCH /api/users/<id>*
-Assign a role to a user *POST /api/users/<user_id>/assign-role*
+- Create a user: *POST /api/users/*
+- Retrieve all users *GET /api/users/*
+- Retrieve a specific user *GET /api/users/<id>*
+- Edit a user's details *PATCH /api/users/<id>*
+- Assign a role to a user *POST /api/users/<user_id>/assign-role*
 
-Create a role: *POST /api/roles/*
-Retrieve all roles *GET /api/roles/*
-Edit role details *PATCH /api/roles/<id>*
-Retrieve a specific role *GET /api/roles/<id>*
+- Create a role: *POST /api/roles/*
+- Retrieve all roles *GET /api/roles/*
+- Edit role details *PATCH /api/roles/<id>*
+- Retrieve a specific role *GET /api/roles/<id>*
 
-Create a permission: *POST /api/permissions/*
-Retrieve all permissions *GET /api/permissions/*
-Edit permission details *PATCH /api/permissions/<id>*
-Retrieve a specific permission *GET /api/permissions/<id>*
+- Create a permission: *POST /api/permissions/*
+- Retrieve all permissions *GET /api/permissions/*
+- Edit permission details *PATCH /api/permissions/<id>*
+- Retrieve a specific permission *GET /api/permissions/<id>*
 
 - I have implemented JWT token authentication for authenticating users, but it is temporarily 
 disabled for ease of testing. To enable it uncomment the following line in *settings.py*:
@@ -44,7 +44,7 @@ The format for the *Authorization* header is `Bearer {token}`
 
 ## Extra Notes
 
-Due to time constraints, I was not able to finish the app.
+Due to time constraints, I was not able to finish implementing all the features.
 Here are some of the yet to be implemented features:
 
 ### frontend

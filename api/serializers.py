@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework import exceptions
 from api.models import Role, Permission, User
 
 
@@ -68,9 +69,10 @@ class UserRoleAssignmentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         role_id = validated_data['role']
-        role = Role.objects.get(pk=role_id)
-        if not role:
-            raise serializers.ValidationError('specified role was not found')
+        try:
+            role = Role.objects.get(pk=role_id)
+        except Role.DoesNotExist:
+            raise exceptions.ParseError('specified role was not found')
         else:
             user = self.context.get('user')
             user.roles.add(role)

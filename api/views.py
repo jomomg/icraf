@@ -27,7 +27,7 @@ class DetailViewBase:
         except self.model.DoesNotExist:
             raise exceptions.NotFound('not found')
         except ValidationError:
-            raise exceptions.ParseError('resource specified with the given id was not found')
+            raise exceptions.ParseError('specified resource was not found')
         else:
             return instance
 

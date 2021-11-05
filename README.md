@@ -28,8 +28,9 @@
 - Edit permission details *PATCH /api/permissions/<id>*
 - Retrieve a specific permission *GET /api/permissions/<id>*
 
-** I have implemented JWT token authentication for authenticating users, but it is temporarily 
-disabled for ease of testing. To enable it uncomment the following line in *settings.py*: **
+#### Note
+- I have implemented JWT token authentication for authenticating users, but it is temporarily 
+disabled for ease of testing. To enable it uncomment the following line in *settings.py*: 
 ```python
 'DEFAULT_PERMISSION_CLASSES': (
     'rest_framework.permissions.IsAuthenticated',

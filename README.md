@@ -8,7 +8,7 @@
 - Start the development server with `python manage.py runserver`
 
 ### Notes on the backend
-- The API endpoints are as follows:
+#### The API endpoints are as follows:
 
 - Login: *POST /api/login/*
 

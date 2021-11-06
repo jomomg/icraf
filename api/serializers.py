@@ -20,13 +20,37 @@ class RoleSerializer(serializers.ModelSerializer):
     """
     Role model serializer
     """
+    permissions = serializers.PrimaryKeyRelatedField(
+        many=True, 
+        queryset=Permission.objects,
+        required=False
+    )
+
     class Meta:
         model = Role
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'permissions')
         read_only_fields = ('id',)
         extra_kwargs = {
             'description': {'required': False}
         }
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        roles = data['permissions']
+        role_objects = Permission.objects.filter(id__in=roles) 
+        serializer = PermissionSerializer(role_objects, many=True)
+        data['permissions'] = serializer.data
+        return data
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.descritption = validated_data.get('description', instance.description)
+        instance.save()
+        if not validated_data.get('permissions'):
+            return instance
+        else:
+            instance.permissions.set(validated_data['permissions'])
+            return instance
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -67,8 +91,11 @@ class UserSerializer(serializers.ModelSerializer):
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.other_names = validated_data.get('other_names', instance.other_names)
         instance.save()
-        instance.roles.set(validated_data['roles'])
-        return instance
+        if not validated_data.get('roles'):
+            return instance
+        else:
+            instance.roles.set(validated_data['roles'])
+            return instance
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

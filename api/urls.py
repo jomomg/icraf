@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from api.views import RoleList, RoleDetail, UserList, UserDetail, Login, UserRoleAssignment
+from api.views import RoleList, RoleDetail, UserList, UserDetail, Login
 from api.views import PermissionList, PermissionDetail
 
 

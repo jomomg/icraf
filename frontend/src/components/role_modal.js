@@ -16,7 +16,7 @@ function AddRoleForm(props) {
         <Form>
             <FormGroup>
                 <Label for="name">
-                First Name
+                Role Name
                 </Label>
                 <Input
                 id="name"

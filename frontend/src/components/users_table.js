@@ -25,14 +25,16 @@ const renderUsers = (users) => {
         <td>
             {user.email}
         </td>
-        <ul style={{marginBottom: '0', paddingBottom: '0'}}>
-            {user.roles.map((role) =>
-                    <li style={{display: 'inline', marginBottom: '0', paddingBottom: '0'}}
-                    key={role.id}>
-                        <Badge color='success'>{role.name}</Badge>{' '}
-                    </li>
-            )}
-        </ul>
+        <td>
+            <ul style={{paddingLeft: '0'}}>
+                {user.roles.map((role) =>
+                        <li style={{display: 'inline', marginBottom: '0', paddingBottom: '0'}}
+                        key={role.id}>
+                            <Badge color='success'>{role.name}</Badge>{' '}
+                        </li>
+                )}
+            </ul>
+        </td>
         <td>
             <ButtonGroup>
                 <Link to={`/users/${user.id}`}>

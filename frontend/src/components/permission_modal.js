@@ -16,7 +16,7 @@ function AddPermissionForm(props) {
         <Form>
             <FormGroup>
                 <Label for="name">
-                First Name
+                Permission Name
                 </Label>
                 <Input
                 id="name"

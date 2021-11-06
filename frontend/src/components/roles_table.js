@@ -2,6 +2,7 @@ import {
     Table,
     Button,
     ButtonGroup,
+    Badge
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -14,6 +15,16 @@ const renderRoles = (roles) => {
         </td>
         <td>
             {role.description}
+        </td>
+        <td>
+            <ul style={{paddingLeft: '0'}}>
+                {role.permissions.map((permission) =>
+                        <li style={{display: 'inline'}}
+                        key={permission.id}>
+                            <Badge color='success'>{permission.name}</Badge>{' '}
+                        </li>
+                )}
+            </ul>
         </td>
         <td>
             <ButtonGroup>
@@ -44,6 +55,9 @@ function RolesTable(props) {
                 </th>
                 <th>
                     Role Description
+                </th>
+                <th>
+                    Role Permissions
                 </th>
                 </tr>
             </thead>

@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
     User model serializer
     """
 
-    roles = RoleSerializer(many=True, read_only=True)
+    roles = serializers.PrimaryKeyRelatedField(many=True, queryset=Role.objects)
 
     class Meta:
         model = User
@@ -57,28 +57,23 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        roles = validated_data['roles']
+        user.roles.add(*roles)
         return user
 
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.other_names = validated_data.get('other_names', instance.other_names)
+        instance.save()
+        instance.roles.set(validated_data['roles'])
+        return instance
 
-class UserRoleAssignmentSerializer(serializers.ModelSerializer):
-    """
-    Role assignment serializer
-    """
-    role = serializers.UUIDField(write_only=True)
-    roles = RoleSerializer(many=True, read_only=True)
-
-    def create(self, validated_data):
-        role_id = validated_data['role']
-        try:
-            role = Role.objects.get(pk=role_id)
-        except Role.DoesNotExist:
-            raise exceptions.ParseError('specified role was not found')
-        else:
-            user = self.context.get('user')
-            user.roles.add(role)
-            return user
-
-    class Meta:
-        model = User
-        exclude = ['password']
-        read_only_fields = ['id', 'email', 'first_name', 'last_name', 'other_names', 'roles']
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        roles = data['roles']
+        role_objects = Role.objects.filter(id__in=roles) 
+        serializer = RoleSerializer(role_objects, many=True)
+        data['roles'] = serializer.data
+        return data

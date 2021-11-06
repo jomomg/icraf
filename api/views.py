@@ -7,8 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.models import Permission, Role, User
-from api.serializers import (PermissionSerializer, UserSerializer, RoleSerializer, 
-UserRoleAssignmentSerializer)
+from api.serializers import (PermissionSerializer, UserSerializer, RoleSerializer)
 from api.utils import success_, error_
 
 
@@ -114,22 +113,6 @@ class UserList(APIView, ListViewMixin):
 class UserDetail(APIView, DetailViewMixin):
     serializer_class = UserSerializer
     model = User
-
-
-class UserRoleAssignment(APIView, DetailViewBase):
-    serializer_class = UserRoleAssignmentSerializer
-    model = User
-
-    def patch(self, request, pk):
-        user = self.get_object(pk)
-        serializer = self.serializer_class(data=request.data, context={'user': user})
-        if serializer.is_valid():
-            serializer.save()
-            resp = success_('role successfully assigned', data=serializer.data)
-            return Response(resp, status=status.HTTP_200_OK)
-        else:
-            resp = error_('an error occurred', data=serializer.errors)
-            return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Login(APIView):

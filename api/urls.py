@@ -9,10 +9,6 @@ urlpatterns = [
 
     re_path(r'^users/?$', UserList.as_view(), name='user-list'),
     path('users/<str:pk>/', UserDetail.as_view(), name='user-detail'),
-    path(
-        'users/<str:pk>/assign-role/', 
-        UserRoleAssignment.as_view(), 
-        name='user-role-assignment'),
 
     re_path(r'^permissions/?$', PermissionList.as_view(), name='permission-list'),
     path('permissions/<str:pk>/', PermissionDetail.as_view(), name='permission-detail'),

@@ -1,5 +1,7 @@
 import {
-    Table
+    Table,
+    ButtonGroup,
+    Button
 } from 'reactstrap';
 
 const renderPermissions = (permissions) => {
@@ -11,13 +13,23 @@ const renderPermissions = (permissions) => {
         <td>
             {permission.description}
         </td>
+        <td>
+            <ButtonGroup>
+                <Button color='success' size='sm'>
+                    Edit
+                </Button>
+                <Button color='danger' size='sm'>
+                    Delete
+                </Button>
+            </ButtonGroup>
+        </td>
         </tr>
     ));
 };
 
 function PermissionsTable(props) {
     return (
-        <Table striped>
+        <Table bordered>
             <thead>
                 <tr>
                 <th>

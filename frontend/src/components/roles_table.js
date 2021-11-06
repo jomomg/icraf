@@ -1,6 +1,10 @@
 import {
-    Table
+    Table,
+    Button,
+    ButtonGroup,
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
+
 
 const renderRoles = (roles) => {
     return roles.map((role) => (
@@ -11,13 +15,28 @@ const renderRoles = (roles) => {
         <td>
             {role.description}
         </td>
+        <td>
+            <ButtonGroup>
+                <Link to={``}>
+                    <Button color='info' size='sm'>
+                        More info
+                    </Button>
+                </Link>
+                <Button color='success' size='sm'>
+                    Edit
+                </Button>
+                <Button color='danger' size='sm'>
+                    Delete
+                </Button>
+            </ButtonGroup>
+        </td>
         </tr>
     ));
 };
 
 function RolesTable(props) {
     return (
-        <Table striped>
+        <Table bordered>
             <thead>
                 <tr>
                 <th>

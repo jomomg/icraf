@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom';
 import {
     Table,
     Badge,
+    Button, 
+    ButtonGroup,
+    ListInlineItem,
+    List,
+    ListGroup,
+    ListGroupItem,
 } from 'reactstrap';
 
 const renderUsers = (users) => {
@@ -19,12 +25,28 @@ const renderUsers = (users) => {
         <td>
             {user.email}
         </td>
+        <ul style={{marginBottom: '0', paddingBottom: '0'}}>
+            {user.roles.map((role) =>
+                    <li style={{display: 'inline', marginBottom: '0', paddingBottom: '0'}}
+                    key={role.id}>
+                        <Badge color='success'>{role.name}</Badge>{' '}
+                    </li>
+            )}
+        </ul>
         <td>
-        <Link to={`/users/${user.id}`}>
-            <Badge color="success">
-                more info
-            </Badge>
-        </Link>
+            <ButtonGroup>
+                <Link to={`/users/${user.id}`}>
+                    <Button color='info' size='sm'>
+                        More info
+                    </Button>
+                </Link>
+                <Button color='success' size='sm'>
+                    Edit
+                </Button>
+                <Button color='danger' size='sm'>
+                    Delete
+                </Button>
+            </ButtonGroup>
         </td>
         </tr>
     ));
@@ -32,7 +54,7 @@ const renderUsers = (users) => {
 
 function UsersTable(props) {
     return (
-        <Table striped>
+        <Table bordered>
             <thead>
                 <tr>
                 <th>
@@ -46,6 +68,9 @@ function UsersTable(props) {
                 </th>
                 <th>
                     Email
+                </th>
+                <th>
+                    Roles
                 </th>
                 </tr>
             </thead>

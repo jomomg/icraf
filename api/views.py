@@ -26,7 +26,7 @@ class DetailViewBase:
         except self.model.DoesNotExist:
             raise exceptions.NotFound('not found')
         except ValidationError:
-            raise exceptions.ParseError('specified resource was not found')
+            raise exceptions.ParseError('invalid id provided')
         else:
             return instance
 
@@ -47,6 +47,11 @@ class DetailViewMixin(DetailViewBase):
             return Response(resp, status.HTTP_200_OK)
         resp = error_('an error_ occurred', serializer.errors)
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        obj = self.get_object(pk)
+        obj.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class ListViewMixin:

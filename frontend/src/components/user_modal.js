@@ -10,10 +10,29 @@ import {
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
+import Select from 'react-select';
+
 
 function AddUserForm(props) {
+    const defaultRoleOptions = props.activeUser.roles.map(role => ({ value: role.id, label: role.name} ));
+    const availableRoles = props.roles.filter(role=>!props.activeUser.roles.includes(role));
+    const availableRolesOptions = availableRoles.map(role => ({ value: role.id, label: role.name} ));
+
     return (
         <Form>
+            <FormGroup>
+                <Label for="exampleEmail">
+                Email
+                </Label>
+                <Input
+                id="userEmail"
+                name="email"
+                value={props.activeUser.email}
+                onChange={props.handleChange}
+                placeholder="User's email"
+                type="email"
+                />
+            </FormGroup>
             <FormGroup>
                 <Label for="firstName">
                 First Name
@@ -51,16 +70,17 @@ function AddUserForm(props) {
                 />
             </FormGroup>
             <FormGroup>
-                <Label for="exampleEmail">
-                Email
+                <Label for="roles">
+                    Roles
                 </Label>
-                <Input
-                id="userEmail"
-                name="email"
-                value={props.activeUser.email}
-                onChange={props.handleChange}
-                placeholder="User's email"
-                type="email"
+                <Select
+                    defaultValue={defaultRoleOptions}
+                    isMulti
+                    name="roles"
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    options={availableRolesOptions}
+                    onChange={props.handleSelectChange}
                 />
             </FormGroup>
             <FormGroup>
@@ -73,7 +93,6 @@ function AddUserForm(props) {
                 value={props.activeUser.password}
                 onChange={props.handleChange}
                 placeholder="Give the user a password"
-                type="password"
                 />
             </FormGroup>
         </Form>
@@ -97,10 +116,11 @@ class AddUserModal extends Component {
         this.setState({ activeUser });
     };
 
-    handleCancel = () => {
-        this.setState({ activeUser: this.props.activeUser });
-        this.props.toggle();
+    handleSelectChange = (options) => {
+        const activeUser = { ...this.state.activeUser, roles: options.map(role => role.value) };
+        this.setState({ activeUser });
     };
+
 
     render() {
         const {toggle, isOpen, handleSubmitUser} = this.props
@@ -115,19 +135,18 @@ class AddUserModal extends Component {
                     <AddUserForm 
                         activeUser={this.state.activeUser}
                         handleChange={this.handleChange}
+                        roles={this.props.roles}
+                        handleSelectChange={this.handleSelectChange}
                     />
                 </ModalBody>
                 <ModalFooter>
                 <Button
-                    color="primary"
+                    color="success"
                     onClick={()=>handleSubmitUser(this.state.activeUser)}
                 >
-                    Add User
+                    Save
                 </Button>
                 {' '}
-                <Button color='danger' onClick={this.handleCancel}>
-                    Cancel
-                </Button>
                 </ModalFooter>
             </Modal>
             

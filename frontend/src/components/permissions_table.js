@@ -4,28 +4,6 @@ import {
     Button
 } from 'reactstrap';
 
-const renderPermissions = (permissions) => {
-    return permissions.map((permission) => (
-        <tr key={permission.id}>
-        <td>
-            {permission.name}
-        </td>
-        <td>
-            {permission.description}
-        </td>
-        <td>
-            <ButtonGroup>
-                <Button color='success' size='sm'>
-                    Edit
-                </Button>
-                <Button color='danger' size='sm'>
-                    Delete
-                </Button>
-            </ButtonGroup>
-        </td>
-        </tr>
-    ));
-};
 
 function PermissionsTable(props) {
     return (
@@ -41,7 +19,36 @@ function PermissionsTable(props) {
                 </tr>
             </thead>
             <tbody>
-                {renderPermissions(props.permissions)}
+                {
+                    props.permissions.map((permission) => (
+                        <tr key={permission.id}>
+                        <td>
+                            {permission.name}
+                        </td>
+                        <td>
+                            {permission.description}
+                        </td>
+                        <td>
+                            <ButtonGroup>
+                                <Button 
+                                    color='success' 
+                                    size='sm' 
+                                    onClick={() => props.handleEdit('permission', permission)}
+                                >
+                                    Edit
+                                </Button>
+                                <Button 
+                                    color='danger' 
+                                    size='sm'
+                                    onClick={()=>props.handleDelete('permission', permission.id)}
+                                >
+                                    Delete
+                                </Button>
+                            </ButtonGroup>
+                        </td>
+                        </tr>
+                    ))
+                }
             </tbody>
         </Table>
     );

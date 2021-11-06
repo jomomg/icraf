@@ -47,7 +47,10 @@ class AddRoleModal extends Component {
         super(props);
 
         this.state = {
-            activeRole: this.props.activeRole,
+            activeRole: {
+                ...this.props.activeRole, 
+                permissions: this.props.activeRole.permissions ? this.props.activeRole.permissions: []
+            },
         };
     };
 

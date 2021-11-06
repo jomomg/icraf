@@ -9,7 +9,7 @@ class Permission(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True)
 
 
 class Role(models.Model):
@@ -18,7 +18,7 @@ class Role(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True)
     permissions = models.ManyToManyField(Permission)
 
 

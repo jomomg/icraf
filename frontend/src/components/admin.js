@@ -13,6 +13,7 @@ import PermissionsTable from './permissions_table';
 import AddUserModal from './user_modal';
 import AddRoleModal from './role_modal';
 import AddPermissionModal from './permission_modal';
+import { NEW_USER, NEW_PERMISSION, NEW_ROLE, ITEM_TYPES } from '../constants';
 
 
 class Admin extends Component {
@@ -37,59 +38,48 @@ class Admin extends Component {
         this.setState({[modalType]: !this.state[`${modalType}`]})
     };
 
-    createNewUser = () => {
-        const newUser = {
-            'first_name': '',
-            'last_name': '',
-            'other_names': '',
-            'email': '',
-            'password': '',
-        };
-        this.setState({ activeUser: newUser });
-        this.toggleModal('userModal');
+    editItem = (itemType, value) => {
+        const relevant = ITEM_TYPES[itemType];
+        this.setState({ [relevant.prop]: value });
+        this.toggleModal(relevant.modal);
     };
-
-    createNewRole = () => {
-        const newRole = {
-            'name': '',
-            'description': '',
-        };
-        this.setState({ activeRole: newRole});
-        this.toggleModal('roleModal');
-    };
-
-    createNewPermission = () => {
-        const newPerm = {
-            'name': '',
-            'description': '',
-        };
-        this.setState({ activePerm: newPerm});
-        this.toggleModal('permModal');
-    };
-
+    
     getData = (dataUrl, dataType) => {
         api.get(dataUrl)
             .then(res => this.setState({ [dataType]: res.data.data, }))
             .catch(err => this.setState({ error: `${err.response.data.message}`, }));
     };
 
+    handleDelete = (itemType, itemId) => {
+        const relevant = ITEM_TYPES[itemType];
+        api.delete(`${relevant.url}${itemId}/`)
+            .then(res => this.getData(relevant.url, `${itemType}s`));
+    };
+
+    handleSubmitItem = (itemType, newItem) => {
+        const relevant = ITEM_TYPES[itemType];
+        this.toggleModal(relevant.modal);
+        if (newItem.id) {
+            api.patch(`${relevant.url}${newItem.id}/`, newItem)
+                .then(res => this.getData(relevant.url, `${itemType}s`));
+            return;
+        };  
+        api.post(relevant.url, newItem)
+            .then(res => this.getData(relevant.url, `${itemType}s`));
+    };
+
+
     handleSubmitUser = (newUser) => {
-        this.toggleModal('userModal');
-        api.post(USERS_URL, newUser)
-            .then(res => this.getData(USERS_URL, 'users'));
+        this.handleSubmitItem('user', newUser)
     };
 
     handleSubmitRole = (newRole) => {
-        this.toggleModal('roleModal');
-        api.post(ROLES_URL, newRole)
-            .then(res => this.getData(ROLES_URL, 'roles'));
+        this.handleSubmitItem('role', newRole)
 
     };
 
     handleSubmitPermission = (newPerm) => {
-        this.toggleModal('permModal');
-        api.post(PERMISSIONS_URL, newPerm)
-            .then(res => this.getData(PERMISSIONS_URL, 'permissions'));
+        this.handleSubmitItem('permission', newPerm)
     };
 
     componentDidMount() {
@@ -115,13 +105,17 @@ class Admin extends Component {
                                 Users
                             </Badge>
                         </div>
-                        <UsersTable users={this.state.users}/>
+                        <UsersTable 
+                            users={this.state.users}
+                            handleEdit={this.editItem}
+                            handleDelete={this.handleDelete}
+                        />
                         <div>
                             <Button
                                 color="primary"
                                 size="sm"
                                 style={{marginLeft: '45%'}}
-                                onClick={this.createNewUser}
+                                onClick={()=>this.editItem('user', NEW_USER)}
                             >
                                 + Add User
                             </Button>
@@ -129,7 +123,9 @@ class Admin extends Component {
                         <AddUserModal 
                             toggle={()=>this.toggleModal('userModal')}
                             isOpen={this.state.userModal}
+                            roles={this.state.roles}
                             activeUser={this.state.activeUser}
+                            key={this.state.activeUser.id}
                             handleSubmitUser={this.handleSubmitUser}
                         />
                         <br/>
@@ -142,7 +138,7 @@ class Admin extends Component {
                         <div>
                             <Button
                                 color="primary"
-                                onClick={this.createNewRole}
+                                onClick={()=>this.editItem('role', NEW_ROLE)}
                                 size="sm"
                                 style={{marginLeft: '45%'}}
                             >
@@ -161,11 +157,15 @@ class Admin extends Component {
                                 Permissions
                             </Badge>
                         </div>
-                        <PermissionsTable permissions={this.state.permissions}/>
+                        <PermissionsTable 
+                            permissions={this.state.permissions}
+                            handleEdit={this.editItem}
+                            handleDelete={this.handleDelete}
+                        />
                         <div>
                             <Button
                                 color="primary"
-                                onClick={this.createNewPermission}
+                                onClick={()=>this.editItem('permission', NEW_PERMISSION)}
                                 size="sm"
                                 style={{marginLeft: '45%'}}
                             >
@@ -176,6 +176,7 @@ class Admin extends Component {
                             toggle={()=>this.toggleModal('permModal')}
                             isOpen={this.state.permModal}
                             activePermission={this.state.activePerm}
+                            key={this.state.activePerm.id}
                             handleSubmitPermission={this.handleSubmitPermission}
                         />
                     </div>

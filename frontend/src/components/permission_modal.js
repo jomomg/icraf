@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import api from '../utils/requests';
+import { PERMISSIONS_URL } from '../constants';
 import {
     Form,
     FormGroup,
@@ -11,45 +13,17 @@ import {
     ModalFooter,
 } from 'reactstrap';
 
-function AddPermissionForm(props) {
-    return (
-        <Form>
-            <FormGroup>
-                <Label for="name">
-                Permission Name
-                </Label>
-                <Input
-                id="name"
-                name="name"
-                value={props.activePermission.name}
-                onChange={props.handleChange}
-                placeholder="Name of the permission"
-                />
-            </FormGroup>
-            <FormGroup>
-                <Label for="description">
-                Permission Description
-                </Label>
-                <Input
-                id="description"
-                name="description"
-                value={props.activePermission.description}
-                onChange={props.handleChange}
-                placeholder="Description of the permission"
-                />
-            </FormGroup>
-        </Form>
-    )
-};
+
 
 class AddPermissionModal extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            activePermission: this.props.activePermission,
+            activePermission: this.props.activePermission
         };
-    };
+        
+    }
+    
 
     handleChange = (e) => {
         let { name, value } = e.target;
@@ -59,10 +33,6 @@ class AddPermissionModal extends Component {
         this.setState({ activePermission });
     };
 
-    handleCancel = () => {
-        this.setState({ activePermission: this.props.activePermission });
-        this.props.toggle();
-    };
 
     render() {
         const {toggle, isOpen, handleSubmitPermission} = this.props
@@ -71,25 +41,44 @@ class AddPermissionModal extends Component {
                 <ModalHeader 
                     toggle={toggle}
                 > 
-                    Add Permission 
+                    Permission Details
                 </ModalHeader>
                 <ModalBody>
-                    <AddPermissionForm 
-                        activePermission={this.state.activePermission}
-                        handleChange={this.handleChange}
-                    />
+                <Form>
+                    <FormGroup>
+                        <Label for="name">
+                        Permission Name
+                        </Label>
+                        <Input
+                        id="name"
+                        name="name"
+                        value={this.state.activePermission.name}
+                        onChange={this.handleChange}
+                        placeholder="Name of the permission"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="description">
+                        Permission Description
+                        </Label>
+                        <Input
+                        id="description"
+                        name="description"
+                        value={this.state.activePermission.description}
+                        onChange={this.handleChange}
+                        placeholder="Description of the permission"
+                        />
+                    </FormGroup>
+                </Form>
                 </ModalBody>
                 <ModalFooter>
                 <Button
                     color="primary"
                     onClick={()=>handleSubmitPermission(this.state.activePermission)}
                 >
-                    Add Permission
+                    Save
                 </Button>
                 {' '}
-                <Button color='danger' onClick={this.handleCancel}>
-                    Cancel
-                </Button>
                 </ModalFooter>
             </Modal>
             

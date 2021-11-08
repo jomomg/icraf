@@ -32,6 +32,9 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=100)
     other_names = models.CharField(max_length=150, blank=True)
     roles = models.ManyToManyField(Role)
-
+    
+    @property
     def is_admin(self):
-        pass
+        if 'admin' in (role.name for role in self.roles.all()):
+            return True
+        return False

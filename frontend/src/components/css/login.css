@@ -1,22 +1,11 @@
-.grid-container {
-    display: grid;
-    grid-template-rows: 1fr 6fr 4fr;
-    row-gap: 10px;
-
-}
-.grid-header{
-    background-color: rgb(114, 159, 243);
-}
-.grid-main {
-    background-color: rgb(237, 245, 245);
-}
-
-.grid-footer{
-    background-color: rgb(255, 255, 255);
-}
-
-.content{
-    margin-left: 30%;
+.login-content{
+    padding-left: 30%;
     margin-bottom: 5%;
     margin-top: 5%;
+}
+
+.footer{
+    position: relative;
+    bottom: 0;
+    background-color: cadetblue;
 }

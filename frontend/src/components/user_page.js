@@ -8,10 +8,20 @@ import {
     CardBody,
     CardTitle,
     Badge,
+    CardText,
     ListInlineItem,
     List,
     Button,
+    Form,
+    FormGroup,
+    ButtonGroup,
+    Input,
+    InputGroup,
+    InputGroupText,
+    CardHeader,
 } from 'reactstrap';
+import { isAuthenticated } from "../utils/authentication";
+import { Redirect } from "react-router-dom";
 
 
 
@@ -22,7 +32,9 @@ class UserPage extends Component {
             userData: {},
             roles: [],
             error: '',
-            modal: false,
+            edit: false,
+            disableInput: true,
+            editedUserData: {}
         }
     };
     
@@ -38,52 +50,141 @@ class UserPage extends Component {
         this.getUserData(userId);
     };
 
+    toggleEdit = (e) => {
+        this.setState({edit: !this.state.edit, disableInput: !this.state.disableInput});
+    }; 
+
+    handleEdit = (e) => {
+        e.preventDefault();
+        this.toggleEdit();
+    }
+
+    handleCancel = (e) => {
+        e.preventDefault();
+        this.toggleEdit();
+    }
+
+    handleOnChange = (e) => {
+        const { name,  value } = e.target;
+        const editedUserData = {...this.state.editedUserData, [name]: value};
+        this.setState({ editedUserData: editedUserData });
+    };
+
+    handleSave = (e) => {
+        const userId = this.state.userData.id
+        e.preventDefault();
+        this.toggleEdit();
+        api.patch(`${USERS_URL}${userId}/`, this.state.editedUserData)
+            .then(res => this.getUserData(userId));
+    };
+
+
+
     render(){
-        const { first_name, last_name, other_names, email} = this.state.userData;
-        const roles = this.state.roles;
     
         return (
-            <div className='grid-container'>
-                <div className='grid-header'>
+            <div className='parent'>
+                <div className='header' style={{ marginBottom: '10px'}}>
                     <Header/>
                 </div>
-                <div className='grid-main'>
+                <div className='main-body' style={{paddingLeft: '15%', paddingRight: '15%', paddingTop: '5%'}}>
                     <div style={{marginLeft: '3%', marginRight: '3%'}}>
-                        <Card>
+                        <h4 style={{marginLeft: '40%'}}>User Details</h4>
+                        <Card color='primary' outline className='text-center'>
                             <CardBody>
+                                <CardHeader>
+                                User: {'  '}
+                                    <Badge tag='h4'>
+                                     {this.state.userData.first_name} {' '}  {this.state.userData.last_name}
+                                    </Badge>
+                                {' '}{' '}
+                                Role(s): 
+                                    {
+                                        this.state.roles.map(role => (
+                                            <Badge 
+                                                color='success' 
+                                                key={role.id}
+                                                style={{marginRight: '5px', marginLeft: '2px'}}
+                                            >
+                                                    {role.name}
+                                            </Badge>
+                                        ))
+                                    }
+                                </CardHeader>
                                 <CardTitle tag="h4">
-                                    User Info
+                                    
                                 </CardTitle>
-                                <br/>
-                                <Badge color='primary'> First Name: </Badge>
-                                <h4>{first_name}</h4>
-                                <Badge color='primary'> Last Name: </Badge>
-                                <h4>{last_name}</h4>
-                                <Badge color='primary'> Other Name(s): </Badge>
-                                <h4>{other_names ? other_names : '--'}</h4>
-                                <Badge color='primary'> Email: </Badge>
-                                <h4>{email}</h4>
-                                <Badge color='primary'> Roles: </Badge>
-                                <br/>
-                                <List>
-                                {roles.map((role) =>
-                                    <ListInlineItem key={role.id}>
-                                        <Badge color='danger'>{role.name}</Badge>
-                                    </ListInlineItem>
-                                )}
-                                <br/>
-                                <Button 
-                                    color='success'
-                                    size='sm' 
-                                    outline> 
-                                    + Assign role 
-                                </Button>
-                                </List>   
+                                <Form>
+                                    <FormGroup>
+                                        <InputGroup>
+                                            <InputGroupText style={{backgroundColor: 'blue', color: 'white'}}>
+                                            Email
+                                            </InputGroupText>
+                                            <Input
+                                            id="userEmail"
+                                            name="email"
+                                            defaultValue={this.state.userData.email}
+                                            disabled={this.state.disableInput}
+                                            onChange={this.handleOnChange}
+                                            />
+                                             
+                                        </InputGroup>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <InputGroup>
+                                            <InputGroupText style={{backgroundColor: 'blue', color: 'white'}}>
+                                            First Name
+                                            </InputGroupText>
+                                            <Input
+                                            id="userFirstName"
+                                            name="first_name"
+                                            defaultValue={this.state.userData.first_name}
+                                            disabled={this.state.disableInput}
+                                            />
+                                        </InputGroup>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <InputGroup>
+                                            <InputGroupText style={{backgroundColor: 'blue', color: 'white'}}>
+                                            Last Name
+                                            </InputGroupText>
+                                            <Input
+                                            id="userLastName"
+                                            name="last_name"
+                                            defaultValue={this.state.userData.last_name}
+                                            disabled={this.state.disableInput}
+                                            />
+                                        </InputGroup>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <InputGroup>
+                                            <InputGroupText style={{backgroundColor: 'blue', color: 'white'}}>
+                                            Other Name(s)
+                                            </InputGroupText>
+                                            <Input
+                                            id="userOtherName"
+                                            name="other_names"
+                                            defaultValue={this.state.userData.other_names}
+                                            disabled={this.state.disableInput}
+                                            />
+                                        </InputGroup>
+                                    </FormGroup>
+                                </Form>
+                                {
+                                    this.state.edit ? 
+                                    (
+                                        <ButtonGroup>
+                                            <Button onClick={this.handleSave} color="success"> save </Button>
+                                            <Button onClick={this.handleCancel} color="danger"> cancel </Button>
+                                        </ButtonGroup>
+                                    ) : 
+                                    (<Button onClick={this.handleEdit} color="secondary"> edit user details</Button>)
+                                }
                             </CardBody>
                         </Card>
                     </div>
                 </div>
-                <div className='grid-footer'></div>
+                <div className='footer'></div>
             </div>
         );
     }

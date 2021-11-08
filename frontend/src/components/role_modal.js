@@ -10,47 +10,15 @@ import {
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
+import Select from 'react-select';
 
-function AddRoleForm(props) {
-    return (
-        <Form>
-            <FormGroup>
-                <Label for="name">
-                Role Name
-                </Label>
-                <Input
-                id="name"
-                name="name"
-                value={props.activeRole.name}
-                onChange={props.handleChange}
-                placeholder="Name of the role"
-                />
-            </FormGroup>
-            <FormGroup>
-                <Label for="description">
-                Role Description
-                </Label>
-                <Input
-                id="description"
-                name="description"
-                value={props.activeRole.description}
-                onChange={props.handleChange}
-                placeholder="Description of the role"
-                />
-            </FormGroup>
-        </Form>
-    )
-};
 
 class AddRoleModal extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            activeRole: {
-                ...this.props.activeRole, 
-                permissions: this.props.activeRole.permissions ? this.props.activeRole.permissions: []
-            },
+            activeRole: this.props.activeRole
         };
     };
 
@@ -62,13 +30,22 @@ class AddRoleModal extends Component {
         this.setState({ activeRole });
     };
 
-    handleCancel = () => {
-        this.setState({ activeRole: this.props.activeRole });
-        this.props.toggle();
-    };
+    handleSelectChange = (options) => {
+        const activeRole = { ...this.state.activeRole, permissions: options.map(perm => perm.value) };
+        this.setState({ activeRole });
+    }
+
 
     render() {
-        const {toggle, isOpen, handleSubmitRole} = this.props
+        const {toggle, isOpen, handleSubmitRole} = this.props;
+        const rolePermissions = this.state.activeRole.permissions ? this.state.activeRole.permissions : []
+        const defaultPermissionOptions = rolePermissions.map(
+            perm => ({ value: perm.id, label: perm.name} ));
+        const availablePermissions = this.props.permissions.filter(
+            perm => !rolePermissions.includes(perm));
+        const availablePermissionsOptions = availablePermissions.map(
+            perm => ({ value: perm.id, label: perm.name} ));
+
         return (
             <Modal isOpen={isOpen} toggle={toggle}>
                 <ModalHeader 
@@ -77,25 +54,57 @@ class AddRoleModal extends Component {
                     Add Role 
                 </ModalHeader>
                 <ModalBody>
-                    <AddRoleForm 
-                        activeRole={this.state.activeRole}
-                        handleChange={this.handleChange}
-                    />
+                    <Form>
+                        <FormGroup>
+                            <Label for="name">
+                            Role Name
+                            </Label>
+                            <Input
+                            id="name"
+                            name="name"
+                            value={this.state.activeRole.name}
+                            onChange={this.handleChange}
+                            placeholder="Name of the role"
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="description">
+                            Role Description
+                            </Label>
+                            <Input
+                            id="description"
+                            name="description"
+                            value={this.state.activeRole.description}
+                            onChange={this.handleChange}
+                            placeholder="Description of the role"
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="permissions">
+                                Permissions
+                            </Label>
+                            <Select
+                                defaultValue={defaultPermissionOptions}
+                                isMulti
+                                name="roles"
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                options={availablePermissionsOptions}
+                                onChange={this.handleSelectChange}
+                            />
+                        </FormGroup>
+                    </Form>
                 </ModalBody>
                 <ModalFooter>
                 <Button
                     color="primary"
                     onClick={()=>handleSubmitRole(this.state.activeRole)}
                 >
-                    Add Role
+                    Save
                 </Button>
                 {' '}
-                <Button color='danger' onClick={this.handleCancel}>
-                    Cancel
-                </Button>
                 </ModalFooter>
-            </Modal>
-            
+            </Modal>   
         )
     };
     

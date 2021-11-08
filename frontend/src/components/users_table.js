@@ -10,7 +10,7 @@ import {
     ListGroupItem,
 } from 'reactstrap';
 
-const renderUsers = (users, handleEdit) => {
+const renderUsers = (users, handleEdit, handleDelete) => {
     return users.map((user) => (
         <tr key={user.id}>
         <td>
@@ -45,7 +45,7 @@ const renderUsers = (users, handleEdit) => {
                 <Button color='success' size='sm' onClick={() => handleEdit('user', user)}>
                     Edit
                 </Button>
-                <Button color='danger' size='sm'>
+                <Button onClick={()=>handleDelete('user', user.id)} color='danger' size='sm'>
                     Delete
                 </Button>
             </ButtonGroup>
@@ -77,7 +77,7 @@ function UsersTable(props) {
                 </tr>
             </thead>
             <tbody>
-                {renderUsers(props.users, props.handleEdit)}
+                {renderUsers(props.users, props.handleEdit, props.handleDelete)}
             </tbody>
         </Table>
     );

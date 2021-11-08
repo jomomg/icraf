@@ -14,7 +14,8 @@ import Select from 'react-select';
 
 
 function AddUserForm(props) {
-    const defaultRoleOptions = props.activeUser.roles.map(role => ({ value: role.id, label: role.name} ));
+    const defaultRoleOptions = props.activeUser.roles ? 
+        props.activeUser.roles.map(role => ({ value: role.id, label: role.name} )): [];
     const availableRoles = props.roles.filter(role=>!props.activeUser.roles.includes(role));
     const availableRolesOptions = availableRoles.map(role => ({ value: role.id, label: role.name} ));
 
@@ -104,7 +105,7 @@ class AddUserModal extends Component {
         super(props);
 
         this.state = {
-            activeUser: this.props.activeUser,
+            activeUser: {...this.props.activeUser},
         };
     };
 
@@ -117,7 +118,8 @@ class AddUserModal extends Component {
     };
 
     handleSelectChange = (options) => {
-        const activeUser = { ...this.state.activeUser, roles: options.map(role => role.value) };
+        const activeUser = { ...this.state.activeUser, roles: options ? options.map(role => role.value): [] };
+
         this.setState({ activeUser });
     };
 

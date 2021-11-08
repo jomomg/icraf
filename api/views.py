@@ -121,6 +121,9 @@ class UserDetail(APIView, DetailViewMixin):
 
 
 class Login(APIView):
+    permission_classes = []
+    authentication_classes = []
+
     def post(self, request):
         login_credentials = self.validate_login_data(request.data)
         user = self.authenticate(**login_credentials)
@@ -128,7 +131,11 @@ class Login(APIView):
             return Response(error_('invalid login credentials'), status.HTTP_401_UNAUTHORIZED)
         else:
             payload = {
-                'email': user.email
+                'email': user.email, 
+                'is_admin': user.is_admin, 
+                'id': str(user.id), 
+                'first_name': user.first_name, 
+                'last_name': user.last_name
             }
             secret = SECRET_KEY
             token = jwt.encode(payload, secret, algorithm='HS256')

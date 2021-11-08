@@ -1,23 +1,7 @@
-.grid-container {
-    display: grid;
-    grid-template-rows: 80px 10fr 1fr;
-    row-gap: 5px;
 
-}
-.grid-header{
-    background-color: rgb(114, 159, 243);
-}
-.grid-main {
-    background-color: rgb(237, 245, 245);
-}
-
-.grid-footer{
-    background-color: rgb(123, 128, 129);
-}
-
-.content{
+.admin-content{
     margin-left: 5%;
     margin-bottom: 5%;
-    margin-top: 5%;
+    margin-top: 3%;
     margin-right: 5%;
 }

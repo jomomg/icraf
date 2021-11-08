@@ -47,7 +47,8 @@ class Admin extends Component {
     getData = (dataUrl, dataType) => {
         api.get(dataUrl)
             .then(res => this.setState({ [dataType]: res.data.data, }))
-            .catch(err => this.setState({ error: `${err.response.data.message}`, }));
+            .catch(err => console.log('error>>>', err) );
+            // .catch(err => this.setState({ error: `${err.response.data.message}`, }));
     };
 
     handleDelete = (itemType, itemId) => {
@@ -91,12 +92,12 @@ class Admin extends Component {
     
     render () {
         return (
-            <div className='grid-container'>
-                <div className='grid-header'>
+            <div className='parent'>
+                <div className='header'>
                     <Header/>
                 </div>
-                <div className='grid-main'>
-                    <div className='content'>
+                <div className='admin-main-body'>
+                    <div className='admin-content'>
                         <div>
                             <h2>Admin Page</h2><br/>
                         </div>
@@ -134,7 +135,11 @@ class Admin extends Component {
                                 Roles
                             </Badge>
                         </div>
-                        <RolesTable roles={this.state.roles}/>
+                        <RolesTable 
+                            roles={this.state.roles}
+                            handleEdit={this.editItem}
+                            handleDelete={this.handleDelete}
+                        />
                         <div>
                             <Button
                                 color="primary"
@@ -150,6 +155,8 @@ class Admin extends Component {
                             isOpen={this.state.roleModal}
                             activeRole={this.state.activeRole}
                             handleSubmitRole={this.handleSubmitRole}
+                            key={this.state.activeRole.id}
+                            permissions={this.state.permissions}
                         />
                         <br/>
                         <div>
@@ -181,7 +188,7 @@ class Admin extends Component {
                         />
                     </div>
                 </div>
-                <div className='grid-footer'></div>
+                <div className='admin-footer'></div>
             </div>
 
         );
